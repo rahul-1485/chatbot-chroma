@@ -12,14 +12,23 @@ st.title("💬 GenAI Chat with Supabase & Groq")
 # Initialize Supabase
 @st.cache_resource
 def init_supabase():
-    url = st.secrets["supabase"]["url"]
-    key = st.secrets["supabase"]["key"]
+    # Try secrets first (for local), then environment variables (for deployment)
+    try:
+        url = st.secrets["supabase"]["url"]
+        key = st.secrets["supabase"]["key"]
+    except:
+        url = os.getenv("SUPABASE_URL")
+        key = os.getenv("SUPABASE_KEY")
     return create_client(url, key)
 
 # Initialize Groq
 @st.cache_resource
 def init_groq():
-    api_key = st.secrets["groq"]["api_key"]
+    # Try secrets first (for local), then environment variables (for deployment)
+    try:
+        api_key = st.secrets["groq"]["api_key"]
+    except:
+        api_key = os.getenv("GROQ_API_KEY")
     return Groq(api_key=api_key)
 
 supabase = init_supabase()
